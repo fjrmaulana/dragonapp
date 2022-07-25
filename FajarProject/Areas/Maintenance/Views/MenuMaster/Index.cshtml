@@ -1,0 +1,648 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/Content/DataTables/datatables.css" />
+    <link href="~/Content/Select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/AdminLTE/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <section class="col-lg-12 p-0 connectedSortable">
+                <div id="cardmaster" class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <b>Menu Master</b>
+                        </h3>
+                        <div class="card-tools">
+                            <a type="button" class="btn btn-tool" href="#" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-header">
+
+                                <div class="card-tools">
+                                    <ul class="nav nav-pills ml-auto">
+                                        <li id="parent_btn_add_company" class="nav-item mr-1">
+                                            <a id="btn_add_master" class="nav-link active bg-primary" href="#" data-toggle="tab">
+                                                Create
+                                            </a>
+                                        </li>
+                                        <li class="nav-item mr-1">
+                                            <a id="btn_refresh_master" class="nav-link active bg-success" href="#" data-toggle="tab">
+                                                Refresh
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a id="btn_delete_master" class="nav-link active bg-danger" href="#" data-toggle="tab">
+                                                Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-1">
+                                    <div id='grid_master' class='table-responsive table-responsive-sm p-2 bg-white'>
+                                        <table id='gridmasterdetail' class='display compact dataTable table caption-top table-bordered table-hover w-100'>
+                                            <caption style='caption-side:top'>Menu Treeview Utama bisa DropDown Dan mempunyai Child Menu</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama</th>
+                                                    <th>Kode</th>
+                                                    <th>Img</th>
+                                                    <th>Cteated</th>
+                                                    <th>Update</th>
+                                                    <th>Role</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Table Child -->
+        <div class="row">
+            <section class="col-lg-12 p-0 connectedSortable">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <b>Menu Child</b>
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-header">
+
+                                <div class="card-tools">
+                                    <ul class="nav nav-pills ml-auto">
+                                        <li id="parent_btn_add_company" class="nav-item mr-1">
+                                            <a id="btn_add_child" class="nav-link active bg-primary" href="#" data-toggle="tab">
+                                                Create
+                                            </a>
+                                        </li>
+                                        <li class="nav-item mr-1">
+                                            <a id="btn_refresh_child" class="nav-link active bg-success" href="#" data-toggle="tab">
+                                                Refresh
+                                            </a>
+                                        </li>
+                                        <li class="nav-item mr-1">
+                                            <a id="btn_delete_child" class="nav-link active bg-danger" href="#" data-toggle="tab">
+                                                Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-1">
+                                    <div id='gridchild' class='table-responsive table-responsive-sm p-2 bg-white'>
+                                        <table id='gridchilddetail' class='display compact dataTable table caption-top table-bordered table-hover w-100'>
+                                            <caption style='caption-side:top'>Menu Level terdapat controller name dan action name fungsi untuk membuat menu baru menyesuaikan controller dan action </caption>
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama</th>
+                                                    <th>Parent</th>
+                                                    <th>Image/Icons</th>
+                                                    <th>Kode</th>
+                                                    <th>Level</th>
+                                                    <th>Controller</th>
+                                                    <th>Action</th>
+                                                    <th>Area</th>
+                                                    <th>Roles</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<div id="partialview"></div>
+
+@section scripts {
+    <script src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Content/DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Content/Select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="~/Content/AdminLTE/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script type="text/javascript">
+        var tableMaster = null;
+        var tableChild = null;
+        $(document).ready(function () {
+            ExpandTreeView_('@Url.Action("Index","MenuMaster", new { Area = "Maintenance" })' + '/Index');
+
+            tableMaster = Refresh_table_Master();
+            tableChild = Refresh_table_Child();
+
+        })
+
+        $("#btn_add_child").click(function () {
+            AddNewDataChild();
+        })
+
+        $("#btn_refresh_child").click(function () {
+            tableChild= Refresh_table_Child();
+        })
+
+        $("#btn_delete_child").click(function () {
+            DeleteDataChild();
+        })
+
+        $("#btn_add_master").click(function () {
+            AddNewDataMaster();
+        })
+
+        $("#btn_refresh_master").click(function () {
+            tableMaster = Refresh_table_Master();
+        })
+
+        $("#btn_delete_master").click(function () {
+            DeleteDataMaster();
+        })
+
+        function DeleteDataChild() {
+            var selRow = tableChild.rows('.selected').data();
+            if (selRow.length <= 0) {
+                Swal.fire({
+                    icon: 'info',
+                    html:'<a href="#">' + 'Please Selected Data First!' + '</a>',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                })
+                return false;
+            }
+            var code = selRow[0]["Kode"];
+           Swal.fire({
+                    title: '<strong>Konfirmasi Delete</strong>',
+                    icon: 'info',
+                    html:
+                        'Are you sure to delete: <br>' +'<a href="#">'+code+'?</a>',
+                    showDenyButton:false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete',
+                    denyButtonText: 'Don`t Delete',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var dataxx = { kode: code}
+                          $.ajax({
+                                url: '@Url.Action("DeleteChild", "MenuMaster",new { Areas="Maintenance"})',
+                                data: JSON.stringify(dataxx),
+                                type: 'Post',
+                                contentType: "application/json; charset=utf-8",
+                                success: function (x, textStatus, jQxhr) {
+                                    if (x.status == "success") {
+                                       tableChild=Refresh_table_Child();
+                                        Swal.fire('Delete Success!', '', 'success')
+                                  }
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                }
+                            });
+                    } else if (result.isDenied) {
+                        Swal.fire('Changes are not saved', '', 'info')
+                    }
+                })
+        }
+
+        function DeleteDataMaster() {
+            var selRow = tableMaster.rows('.selected').data();
+            var data = null;
+            if (selRow.length <= 0) {
+                Swal.fire({
+                    icon: 'info',
+                    html:'<a href="#">' + 'Please Selected Data First!' + '</a>',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                })
+                return false;
+            }
+            var code = selRow[0]["Kode"];
+           Swal.fire({
+                    title: '<strong>Konfirmasi Delete</strong>',
+                    icon: 'info',
+                    html:
+                        'Are you sure to delete: <br>' +'<a href="#">'+code+'?</a>',
+                    showDenyButton:false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete',
+                    denyButtonText: 'Don`t Delete',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var dataxx = { kode: code}
+                          $.ajax({
+                              url: '@Url.Action("DeleteMaster", "MenuMaster",new { Areas="Maintenance"})',
+                              data: JSON.stringify(dataxx),
+                                type: 'Post',
+                                contentType: "application/json; charset=utf-8",
+                                success: function (x, textStatus, jQxhr) {
+                                    if (x.status == "success") {
+                                        tableMaster = Refresh_table_Master();
+                                        Swal.fire('Delete Success!', '', 'success')
+                                  }
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                }
+                            });
+                    } else if (result.isDenied) {
+                        Swal.fire('Changes are not saved', '', 'info')
+                    }
+                })
+        }
+
+        function AddNewDataChild() {
+             var selRow =tableChild.rows('.selected').data();
+            if (selRow.length <= 0) {
+                Swal.fire({
+                    icon: 'info',
+                    html:
+                     '<a href="#">' + 'Please Selected Data First!' + '</a>',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                 })
+                return false;
+            }
+
+            const modal_add_attr = {id: 'mastercreate',class: 'modal fade',tabindex: '-1',role: 'dialog','aria-labelledby': '-1','aria-hidden': 'true'};
+            var modal_add = document.createElement("div");
+            setAttributes(modal_add, modal_add_attr);
+
+            const modal_document_attr = { class: 'modal-dialog modal-dialog-centered', role: 'document' };
+            var modal_document = document.createElement("div");
+            setAttributes(modal_document, modal_document_attr); modal_add.appendChild(modal_document);
+
+            const modal_content_attr = { class: 'modal-content' };
+            var modal_content = document.createElement("div");
+            setAttributes(modal_content, modal_content_attr); modal_document.appendChild(modal_content);
+
+            const modal_header_attr = { class: 'modal-header' };
+            var modal_header = document.createElement("div");
+            setAttributes(modal_header, modal_header_attr); modal_content.appendChild(modal_header);
+            modal_header.innerHTML = "<h5 class='modal-title' id='exampleModalLongTitle'>Create</h5><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+
+            // body
+            const modal_body_attr = { class: 'modal-body' };
+            var modal_body = document.createElement("div");
+            setAttributes(modal_body, modal_body_attr); modal_content.appendChild(modal_body);
+
+            const modal_card_attr = { class: 'card' };
+            var modal_card = document.createElement("div");
+            setAttributes(modal_card, modal_card_attr); modal_body.appendChild(modal_card);
+
+            const modal_cardbody_attr = { class: 'card-body' };
+            var modal_cardbody = document.createElement("div");
+            setAttributes(modal_cardbody, modal_cardbody_attr); modal_card.appendChild(modal_cardbody);
+
+            // Nanti di buat edittext di sini
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtnama', 'Nama');
+            modal_cardbody.innerHTML += CreateSelect('Parent','txtparent', 'select2D');
+            modal_cardbody.innerHTML += CreateSelect('Icon/Image', 'txtimg', 'select2D');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtkode', 'Kode');
+            modal_cardbody.innerHTML += CreateSelect('Level', 'txtlevel', 'select2D');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtcontroller', 'Controller Name');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtAction', 'Action Name');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtArea', 'Area Name');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtrole', 'Role');
+
+            const modal_footer_attr = { class: 'modal-footer' };
+            var modal_footer = document.createElement("div");
+            setAttributes(modal_footer, modal_footer_attr); modal_content.appendChild(modal_footer);
+
+
+            //<button type="button" class="btn btn-sec" data-dismiss="modal">Close</button>
+            const modal_btnclose_attr = { class: 'btn btn-danger', 'data-dismiss': 'modal', value: 'Close', type: 'button'  };
+            var modal_btnclose = document.createElement("button");
+            modal_btnclose.innerHTML = 'Close';
+            setAttributes(modal_btnclose, modal_btnclose_attr); modal_footer.appendChild(modal_btnclose);
+
+            const modal_btnsev_attr = { class: 'btn btn-primary', value: 'Save',type:'button',id:'btnMAsterSave' };
+            var modal_btnsev = document.createElement("button");
+            modal_btnsev.innerHTML = 'Save';
+            setAttributes(modal_btnsev, modal_btnsev_attr); modal_footer.appendChild(modal_btnsev);
+
+            modal_btnsev.onclick = () => {
+                //console.log('clicked')CreateErrorPublic
+                var txtnama = document.getElementById("txtnama");
+                var txtparent = document.getElementById("txtparent");
+                var txtimg = document.getElementById("txtimg");
+                var txtkode = document.getElementById("txtkode");
+                var txtlevel = document.getElementById("txtlevel");
+                var txtcontroller = document.getElementById("txtcontroller");
+                var txtAction = document.getElementById("txtAction");
+                var txtArea = document.getElementById("txtArea");
+                var txtrole = document.getElementById("txtrole");
+
+                if (!txtnama.value.trim()) { CreateErrorPublic("txtnama", "This Empty!"); return false; }
+                if (!txtparent.value.trim()) { CreateErrorPublic("txtparent", "This Empty!"); return false; }
+                if (!txtimg.value.trim()) { CreateErrorPublic("txtimg", "This Empty!"); return false; }
+                if (!txtkode.value.trim()) { CreateErrorPublic("txtkode", "This Empty!"); return false; }
+                if (!txtlevel.value.trim()) { CreateErrorPublic("txtlevel", "This Empty!"); return false; }
+                if (!txtcontroller.value.trim()) { CreateErrorPublic("txtcontroller", "This Empty!"); return false; }
+                if (!txtAction.value.trim()) { CreateErrorPublic("txtAction", "This Empty!"); return false; }
+                if (!txtArea.value.trim()) { CreateErrorPublic("txtArea", "This Empty!"); return false; }
+                if (!txtrole.value.trim()) { CreateErrorPublic("txtrole", "This Empty!"); return false; }
+
+                var datakirim = {
+                   id:0,
+                    Nama: txtnama.value,
+                    Parent: txtparent.value,
+                    Img: txtimg.value,
+                    Kode: txtkode.value,
+                    mlm: txtlevel.value,
+                    ControllerName: txtcontroller.value,
+                    ActionName: txtAction.value,
+                    AreaName: txtArea.value,
+                    Role: txtrole.value,
+                    Created: GetDateToday(),
+                    Update: GetDateToday()
+                }
+                BtnLoading($("#btnMAsterSave"));
+                 $.ajax({
+                    url: '@Url.Action("CreateChild", "MenuMaster", new { Area = "Maintenance" })',
+                    type: 'POST',
+                    data: JSON.stringify(datakirim),
+                    contentType: "application/json; charset=utf-8",
+                     success: function (x, textStatus, jQxhr) {
+                         BtnReset($("#btnMAsterSave"));
+                         if (x.status === 'error') {
+                             CreateErrorPublic("txtkode", x.msg);
+                             return false;
+                         } else {
+                             $("#mastercreate").modal('hide');
+                             tableChild=Refresh_table_Child();
+                         }
+                    },
+                     error: function (jqXhr, textStatus, errorThrown) {
+                        BtnReset($("#btnMAsterSave"));
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            document.getElementById("partialview").innerHTML = "&nbsp;";
+            document.getElementById("partialview").appendChild(modal_add);
+            $("#mastercreate").modal('show');
+
+            $("#mastercreate").on('shown.bs.modal', function () {
+                $.ajax({
+                   url: '@Url.Action("GetList", "MenuMaster", new { Area = "Maintenance" })',
+                   type: 'POST',
+                   contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                       if (x.status == "sukses") {
+                           $('#txtparent,#txtlevel,#txtimg').empty();
+                           $.each(x.master, function (i, item) {
+                               $('#txtparent').append($('<option>', {
+                                   value: item.Id,
+                                   text: item.Name
+                               }));
+                           });
+                           $.each(x.child, function (i, item) {
+                               $('#txtlevel').append($('<option>', {
+                                   value: item.mlm,
+                                   text: item.Name
+                               }));
+                           });
+                           $.each(x.icon, function (i, item) {
+                               $('#txtimg').append($('<option>', {
+                                   value: item,
+                                   text: item
+                               }));
+                           });
+                           $("#txtparent,#txtlevel,#txtimg").select2({
+                               width:"100%",theme:"classic"
+                           });
+                       }
+                    },
+                     error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+            });
+
+        }
+
+        function AddNewDataMaster() {
+            const modal_add_attr = {id: 'mastercreate',class: 'modal fade',tabindex: '-1',role: 'dialog','aria-labelledby': '-1','aria-hidden': 'true'};
+            var modal_add = document.createElement("div");
+            setAttributes(modal_add, modal_add_attr);
+
+            const modal_document_attr = { class: 'modal-dialog modal-dialog-centered', role: 'document' };
+            var modal_document = document.createElement("div");
+            setAttributes(modal_document, modal_document_attr); modal_add.appendChild(modal_document);
+
+            const modal_content_attr = { class: 'modal-content' };
+            var modal_content = document.createElement("div");
+            setAttributes(modal_content, modal_content_attr); modal_document.appendChild(modal_content);
+
+            const modal_header_attr = { class: 'modal-header' };
+            var modal_header = document.createElement("div");
+            setAttributes(modal_header, modal_header_attr); modal_content.appendChild(modal_header);
+            modal_header.innerHTML = "<h5 class='modal-title' id='exampleModalLongTitle'>Create</h5><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+
+            // body
+            const modal_body_attr = { class: 'modal-body' };
+            var modal_body = document.createElement("div");
+            setAttributes(modal_body, modal_body_attr); modal_content.appendChild(modal_body);
+
+            const modal_card_attr = { class: 'card' };
+            var modal_card = document.createElement("div");
+            setAttributes(modal_card, modal_card_attr); modal_body.appendChild(modal_card);
+
+            const modal_cardbody_attr = { class: 'card-body' };
+            var modal_cardbody = document.createElement("div");
+            setAttributes(modal_cardbody, modal_cardbody_attr); modal_card.appendChild(modal_cardbody);
+
+            // Nanti di buat edittext di sini
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtnama', 'Nama');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtkode', 'Kode');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtimg', 'Icon/Image');
+            modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtrole', 'Role');
+
+            const modal_footer_attr = { class: 'modal-footer' };
+            var modal_footer = document.createElement("div");
+            setAttributes(modal_footer, modal_footer_attr); modal_content.appendChild(modal_footer);
+
+
+            //<button type="button" class="btn btn-sec" data-dismiss="modal">Close</button>
+            const modal_btnclose_attr = { class: 'btn btn-danger', 'data-dismiss': 'modal', value: 'Close', type: 'button'  };
+            var modal_btnclose = document.createElement("button");
+            modal_btnclose.innerHTML = 'Close';
+            setAttributes(modal_btnclose, modal_btnclose_attr); modal_footer.appendChild(modal_btnclose);
+
+            const modal_btnsev_attr = { class: 'btn btn-primary', value: 'Save',type:'button',id:'btnMAsterSave' };
+            var modal_btnsev = document.createElement("button");
+            modal_btnsev.innerHTML = 'Save';
+            setAttributes(modal_btnsev, modal_btnsev_attr); modal_footer.appendChild(modal_btnsev);
+
+            modal_btnsev.onclick = () => {
+                //console.log('clicked')CreateErrorPublic
+                var txtnama = document.getElementById("txtnama");
+                var txtkode = document.getElementById("txtkode");
+                var txtimg = document.getElementById("txtimg");
+                var txtrole = document.getElementById("txtrole");
+                if (!txtnama.value.trim()) { CreateErrorPublic("txtnama", "This Empty!"); return false; }
+                if (!txtkode.value.trim()) { CreateErrorPublic("txtkode", "This Empty!"); return false; }
+                if (!txtimg.value.trim()) { CreateErrorPublic("txtimg", "This Empty!"); return false; }
+                if (!txtrole.value.trim()) { CreateErrorPublic("txtrole", "This Empty!"); return false; }
+
+                var datakirim = {
+                    id :0,
+                    Nama: txtnama.value,
+                    Kode: txtkode.value,
+                    Img: txtimg.value,
+                    Created: null,
+                    Update: null,
+                    Role: txtrole.value
+                }
+                BtnLoading($("#btnMAsterSave"));
+                 $.ajax({
+                   url: '@Url.Action("CreateMaster", "MenuMaster", new { Area = "Maintenance" })',
+                    type: 'POST',
+                    data: JSON.stringify(datakirim),
+                    contentType: "application/json; charset=utf-8",
+                     success: function (x, textStatus, jQxhr) {
+                         BtnReset($("#btnMAsterSave"));
+                         if (x.status === 'error') {
+                             CreateErrorPublic("txtkode", x.msg);
+                             return false;
+                         } else {
+                             $("#mastercreate").modal('hide');
+                             tableMaster = Refresh_table_Master();
+                         }
+                    },
+                     error: function (jqXhr, textStatus, errorThrown) {
+                         BtnReset($("#btnMAsterSave"));
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            document.getElementById("partialview").innerHTML = "&nbsp;";
+            document.getElementById("partialview").appendChild(modal_add);
+            $("#mastercreate").modal('show');
+
+            $("#mastercreate").on('shown.bs.modal', function () {
+                console.log("Modal On Show!");
+            });
+        }
+
+        function Refresh_table_Master() {
+            return $("#gridmasterdetail").DataTable({
+                bDestroy: true,
+                responsive: true,
+                processing: true,
+                "order": [[1, "asc"]],
+                serverSide: true,
+                "lengthMenu": [[5, 10, 20, 50, 100, 1000, -1], [5, 10, 20, 50, 100, 1000, "All"]],
+                "pageLength": 5,
+                "ajax":
+                {
+                    "url": '@Url.Action("GetDataMaster", "MenuMaster", new { Area = "Maintenance" })',
+                    "type": "POST",
+                    "dataType": "JSON"
+                },
+                "columns": [
+                    { "data": "Nama", "name": "Nama" },
+                    { "data": "Kode", "name": "Kode" },
+                    { "data": "Img", "name": "Img" },
+                    {
+                        "data": "Created", "name": "Created", "render": function (data, type, row, meta) {
+                            return moment(row.PrintDate).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    {
+                        "data": "Update", "name": "Update", "render": function (data, type, row, meta) {
+                            return moment(row.PrintDate).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "Role", "name": "Role" }
+                ],
+                "select": {
+                    "style": 'os'
+                },
+                "language":
+                {
+                    "search": "",
+                    "searchPlaceholder": "Search...",
+                    "emptyTable": "No record found.",
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:40px;color:rgb(75, 183, 245)'></i></div>"
+                }
+            })
+        }
+
+        function Refresh_table_Child() {
+            return $("#gridchilddetail").DataTable({
+                bDestroy: true,
+                responsive: true,
+                processing: true,
+                "order": [[1, "asc"]],
+                serverSide: true,
+                "lengthMenu": [[5, 10, 20, 50, 100, 1000, -1], [5, 10, 20, 50, 100, 1000, "All"]],
+                "pageLength": 5,
+                "ajax":
+                {
+                    "url": '@Url.Action("GetDataChild", "MenuMaster", new { Area = "Maintenance" })',
+                    "type": "POST",
+                    "dataType": "JSON"
+                },
+                "columns": [
+                    { "data": "Nama", "name": "Nama" },
+                    { "data": "Parent", "name": "Parent" },
+                    { "data": "Img", "name": "Img" },
+                    { "data": "Kode", "name": "Kode" },
+                    { "data": "mlm", "name": "mlm" },
+                    { "data": "ControllerName", "name": "ControllerName" },
+                    { "data": "ActionName", "name": "ActionName" },
+                    { "data": "AreaName", "name": "AreaName" },
+                    { "data": "Role", "name": "Role" }
+                ],
+                "select": {
+                    "style": 'os'
+                },
+                "language":
+                {
+                    "search": "",
+                    "searchPlaceholder": "Search...",
+                    "emptyTable": "No record found.",
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:40px;color:rgb(75, 183, 245)'></i></div>"
+                }
+            })
+        }
+
+        function CreateSelect(nama_, id_, select2D_) {
+            var databal = "";
+            databal += " <div class='form-group row mb-1'>";
+            databal += "                        <label class='col-sm-4 control-label'>" + nama_ + "</label>";
+            databal += "                         <div class='col-sm-8'>";
+            databal += "                             <select class='form-control form-control-sm " + select2D_ + "' id='" + id_ + "'></select>";
+            databal += "                         </div>";
+            databal += "                     </div>";
+            return databal;
+        }
+    </script>
+}

@@ -1,0 +1,174 @@
+﻿<div class="modal fade" id="companycreate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Create</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group row mb-1">
+                            <label class="col-sm-4 control-label">Company Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="txtCompanyName" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-1">
+                            <label class="col-sm-4 control-label">Address</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="txtaddress" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-1">
+                            <label class="col-sm-4 control-label">NPWP</label>
+                            <div class="col-sm-8">
+                                <input id="txtnpwp" type="text" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-1">
+                            <label class="col-sm-4 control-label">Contact Person</label>
+                            <div class="col-sm-8">
+                                <input id="txtContactPerson" type="text" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-1">
+                            <label class="col-sm-4 control-label">Contact Phone</label>
+                            <div class="col-sm-8">
+                                <input id="txtContactPhone" type="text" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-1">
+                            <label class="col-sm-4 control-label">Type of Company</label>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("txtcompanytype", (SelectList)ViewData["listTypeCompany"], new { @id = "txtcompanytype", @class = "form-control form-control-sm select2DDList" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-1">
+                            <label class="col-sm-4 control-label">Status Active</label>
+                            <div class="col-sm-8">
+                                <input id="txtstatusactive" type="checkbox" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="btnSave" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#btnSave").click(function () {
+        SaveNewCompany();
+    })
+
+    function SaveNewCompany() {
+        var address = $("#txtaddress").val();
+        var CompanyName = $("#txtCompanyName").val();
+        var npwp = $("#txtnpwp").val();
+        var ContactPerson = $("#txtContactPerson").val();
+        var ContactPhone = $("#txtContactPhone").val();
+        var companytype = $("#txtcompanytype").val();
+        var statusactive = $("#txtstatusactive").is(':checked');//if($(this).is(':checked'))
+        if (!address.trim()) {
+            CreateError("txtaddress", "This Empty!");
+            return false;
+        }
+        if (!CompanyName.trim()) {
+            CreateError("txtCompanyName", "This Empty!");
+            return false;
+        }
+        if (!npwp.trim()) {
+            CreateError("txtnpwp", "This Empty!");
+            return false;
+        }
+        if (!ContactPerson.trim()) {
+            CreateError("txtContactPerson", "This Empty!");
+            return false;
+        }
+        if (!ContactPhone.trim()) {
+            CreateError("txtContactPhone", "This Empty!");
+            return false;
+        }
+        if (!companytype.trim()) {
+            CreateError("txtcompanytype", "This Empty!");
+            return false;
+        }
+       
+
+        var data = {
+            ID:'',
+            CompanyName: CompanyName,
+            CompanyAddress: address,
+            NPWP: npwp,
+            ContactPerson: ContactPerson,
+            ContactPhone:ContactPhone,
+            CompanyType: companytype,
+            statusactive: statusactive,
+            CustCode: CreateInitialID()
+        }
+
+         $.ajax({
+                   url: '@Url.Action("Create", "Company")',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        if (x.status==="success") {
+                            Refresh_gridcompanydetail();
+                            $("#companycreate").modal('hide');
+                            document.getElementById("partialview").innerHTML = "&nbsp;";
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+
+    }
+
+    function CreateError(idelem, msg) {
+        var x = document.getElementById(idelem);
+        var button = document.createElement('button');
+        button.type = "Submit";
+        button.innerHTML = msg;
+        button.id = "btn" + idelem
+        button.className = "btn btn-sm btn-danger"
+        button.onclick = function () {
+            document.getElementById(button.id).remove();
+        };
+        x.appendChild(button);
+        insertAfter22062022(x, button);
+        x.addEventListener("click", function () {
+            document.getElementById(button.id).remove();
+        });
+    }
+    function insertAfter22062022(referenceNode, newNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+    function CreateInitialID() {
+        var date = new Date();
+        var components = [
+            date.getYear(),
+            date.getMonth(),
+            date.getDate(),
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds(),
+            date.getMilliseconds()
+        ];
+        return "id-"+ components.join("");
+    }
+</script>

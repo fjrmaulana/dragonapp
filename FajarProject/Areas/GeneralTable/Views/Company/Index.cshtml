@@ -1,0 +1,247 @@
+﻿@{
+    ViewBag.Title = "List Company";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/DataTables/datatables.css" />
+    <link href="~/Content/Select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <section class="col-lg-12 p-0 connectedSortable">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <b>Company Table</b>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-header">
+
+                                <div class="card-tools">
+                                    <ul class="nav nav-pills ml-auto">
+                                        <li id="parent_btn_add_company" class="nav-item mr-1">
+                                            <a id="btn_add_company" class="nav-link active bg-primary" href="#" data-toggle="tab">
+                                                Create
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a id="btn_refresh_company" class="nav-link active bg-success" href="#" data-toggle="tab">
+                                                Refresh
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-1">
+                                    <div id='gridcompany' class='table-responsive table-responsive-sm p-2 bg-white'>
+                                        <table id='gridcompanydetail' class='display compact dataTable table caption-top table-bordered table-hover w-100'>
+                                            <caption style='caption-side:top'>Description of Company Table</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th>Company Name</th>
+                                                    <th>Address</th>
+                                                    <th>NPWP</th>
+                                                    <th>Contact Person</th>
+                                                    <th>Contact Phone</th>
+                                                    <th>Type of Company</th>
+                                                    <th>Cust Code</th>
+                                                    <th>Status Active</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<div id="partialview"></div>
+
+
+
+
+@section scripts {
+    <script src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Content/DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Content/Select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        var table = null;
+        $(document).ready(function () {
+            ExpandTreeView_('@Url.Action("Index","Company", new { Area = "GeneralTable" })'+'/Index');
+
+            Refresh_gridcompanydetail();
+
+            $("#btnLoop").click(function () {
+                console.log(CreateInitialID());
+            })
+
+            $("#btn_refresh_company,#parent_btn_add_company").click(function () {
+                Refresh_gridcompanydetail();
+            })
+
+            $("#btn_add_company").click(function () {
+                CreateNew();
+            })
+
+            $("#btn_refresh_company,#parent_btn_add_company").click(function () {
+                Refresh_gridcompanydetail();
+            })
+
+            $('#gridcompanydetail').on('click', 'td.editor-delete', function (e) {
+                e.preventDefault();
+                var x = table.row($(this).parents('tr')).data();
+                var cust_name = x["CompanyName"];
+                var cust_code = x["CustCode"];
+                Swal.fire({
+                    title: '<strong>Konfirmasi Delete</strong>',
+                    icon: 'info',
+                    html:
+                        'Are you sure to delete: <br>' +'<a href="#">'+cust_name+'?</a>',
+                    showDenyButton:false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete',
+                    denyButtonText: 'Don`t Delete',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var data = { custid: cust_code}
+                          $.ajax({
+                              url: '@Url.Action("Delete", "Company")',
+                                data:JSON.stringify(data),
+                                type: 'Post',
+                                contentType: "application/json; charset=utf-8",
+                                success: function (x, textStatus, jQxhr) {
+                                  if (x.status=="success") {
+                                      Refresh_gridcompanydetail();
+                                      Swal.fire('Delete Success!', '', 'success')
+                                  }
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                }
+                            });
+                    } else if (result.isDenied) {
+                        Swal.fire('Changes are not saved', '', 'info')
+                    }
+                })
+            })
+        })
+
+        function CreateInitialID() {
+            var date = new Date();
+            var components = [
+                date.getYear(),
+                date.getMonth(),
+                date.getDate(),
+                date.getHours(),
+                date.getMinutes(),
+                date.getSeconds(),
+                date.getMilliseconds()
+            ];
+            return "id-" + components.join("");
+        }
+
+        function Refresh_gridcompanydetail() {
+            $.ajax({
+                    url: '@Url.Action("GetData", "Company")',
+                    type: 'post',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        RefreshTable(x);
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+        }
+
+        function CreateNew() {
+             document.getElementById("partialview").innerHTML = "&nbsp;";
+             $.ajax({
+                    url: '@Url.Action("Create", "Company")',
+                    type: 'Get',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        document.getElementById("partialview").innerHTML = "&nbsp;";
+                        $("#partialview").html(x);
+                        $("#companycreate").modal('show');
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+        }
+
+        function RefreshTable(d) {
+            table = $('#gridcompanydetail').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        "extend": 'pdfHtml5',
+                        "text": '<i class="fas fa-file-pdf mr-2" style="font- size: 24px; color: black">&nbsp; Convert Pdf</i>',
+                        'className': 'btn btn-primary-outline bg-white',
+                        'pageSize': 'LEGAL'
+                    }
+                ],
+                initComplete: function () {
+                    var btns = $('.dt-button');
+                    btns.removeClass('dt-button');
+                },
+                bDestroy: true,
+                responsive: true,
+                data: d,
+                "columns": [
+                    { "data": "CompanyName", name: "CompanyName" },
+                    { "data": "CompanyAddress", name: "CompanyAddress" },
+                    { "data": "NPWP", name:"NPWP" },
+                    { "data": "ContactPerson", name: "ContactPerson" },
+                    { "data": "ContactPhone", name:"ContactPhone" },
+                    {
+                        "data": "CompanyType", name: "CompanyType", "className": "text-center",
+                    },
+                    { "data": "CustCode", name:"CustCode" },
+                    { "data": "statusactive", name: "statusactive", "className": "text-center" },
+                    {
+                        "data": null,
+                        "className": "text-center editor-delete",
+                        "defaultContent": '<i class="fa fa-trash" style="color: red"/>',
+                        "orderable": "false",
+                    }
+
+                ],
+                'columnDefs': [
+                    {
+                        "targets":[0], // your case first column
+                        "width": "120px"
+                    },
+                    {
+                        "targets": [1], // your case first column
+                        "width": "150px"
+                    },
+                    {
+                        "targets": [5], // your case first column
+                        "width": "20px"
+                    },
+                    {
+                        "targets": [7], // your case first column
+                        "width": "20px"
+                    }
+                ],
+                  "select": false
+            });
+        }
+
+    </script>
+}

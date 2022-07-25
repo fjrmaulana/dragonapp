@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link href="~/Content/Toast/toastr.min.css" rel="stylesheet" type="text/css" />
+}
+
+<div id="partialview"></div>
+<button id="btntest" type="button" class="btn btn-primary btn-sm">
+    Tes Konek Socket
+</button>
+
+@section scripts{
+    <script type="text/javascript" src="~/Content/sockjs-client/stomp.min.js"></script>
+    <script type="text/javascript" src="~/Content/sockjs-client/sockjs.min.js"></script>
+    <script type="text/javascript" src="~/Content/Toast/toastr.min.js"></script>
+
+
+    <script type="text/javascript">
+        var stompClient = null;
+
+        $(document).ready(function () {
+
+            ExpandTreeView_('@Url.Action("Index","SwaggerUnicorn", new { Area = "DocumentApi" })' + '/Index');
+
+            $("#btntest").click(function () {
+                //connect();
+                naviGateToSwagge(); 
+            })
+        })
+
+        function naviGateToSwagge() {
+              $.ajax({
+                              url: '@Url.Action("GenerateId", "SwaggerUnicorn", new {Area= "DocumentApi" })',
+                              type: 'Post',
+                              contentType: "application/json; charset=utf-8",
+                               success: function (x, textStatus, jQxhr) {
+                                   console.log(x);
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                }
+                            });
+            }
+
+        function connect() {
+            var url = 'wss://nlehub.kemenkeu.go.id/gateway/nle-platform-websocket/1.0/websocket';
+            var socket = new SockJS(url);
+            stompClient = Stomp.over(socket);
+            var thisheaders = { 'nle-api-key': '575c8ae3-a185-457a-a6f8-2ce8233ec4ee' };
+            stompClient.connect(thisheaders, function (frame) {
+                //setConnected(true);
+                console.log('1-Connected: ' + frame);
+                stompClient.subscribe('/topic/sp2', function (pesan) {
+                    var json_pesan = JSON.stringify(pesan.body);
+                    console.log('2-Urai Json: ' + json_pesan);
+                    //showGreeting(JSON.parse(json_pesan));
+                });
+            });
+        }
+
+        function checkconnection() {
+            //var status = navigator.onLine;
+            if (!navigator.onLine) {
+                alert("offline");
+            } else {
+                alert("online");
+            }
+        }
+    </script>
+}
+

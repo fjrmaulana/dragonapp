@@ -1,0 +1,888 @@
+﻿@{
+    ViewBag.Title = "Save Booking H2H";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/DataTables/datatables.css" />
+    <link rel="stylesheet" href="~/Content/DataTables/DataTables-1.10.25/css/dataTables.bootstrap5.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/Select2/css/select2.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/flatpickr/flatpickr.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/JQuery_UI/jquery-ui.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/flatpickr/plugins/monthSelect/style.css" type="text/css" />
+    <link href="~/Content/Toast/toastr.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        td.details-control {
+            background: url("@Url.Content("~/Images/Default/details_open.png")") no-repeat center center;
+        }
+
+        tr.shown td.details-control {
+             background: url("@Url.Content("~/Images/Default/details_close.png")") no-repeat center center;
+        }
+    </style>
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-1">
+            <section class="col-lg-12 p-0">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <b>Save Booking H2H</b>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-12">
+                                <div class="card card-primary card-tabs">
+                                    <div class="card-header p-0 pt-1">
+                                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Transaction</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Configuration</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Setting Base Url</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                                            <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                                <div class="row mb-1">
+                                                    <div class="col-sm-5">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-2 col-form-label" for="txtterminal">Terminal</label>
+                                                            <div class="col-sm-10">
+                                                                @Html.DropDownList("txtterminal", (ViewData["TermialList"] as SelectList), new { @class = "form-select form-control form-select-sm", @id = "txtterminal" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-2 col-form-label" for="txtblno">BL-NO</label>
+                                                            <div class="col-sm-10">
+                                                                @Html.DropDownList("txtblno", (ViewData["bList"] as SelectList), new { @class = "form-select form-control form-select-sm", @id = "txtblno" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-3 col-form-label" for="txtstatus">Status</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="txtstatus" class="form-select form-control form-select-sm">
+                                                                    <option value="ALL" selected>All</option>
+                                                                    <option value="0">Pending</option>
+                                                                    <option value="1">Success</option>
+                                                                    <option value="500">Failed</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-1">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-3 col-form-label" for="txttgl">Tanggal</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control form-control-sm" id="txttgl" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="col-form-label-sm col-sm-2" for="txttglto">s/d</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control form-control-sm" id="txttglto" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="col-form-label-sm col-sm-3" for="txtLimit">Limit</label>
+                                                            <div class="col-sm-9 mb-2">
+                                                                @Html.DropDownList("txtLimit", (ViewData["bLimit"] as SelectList), new { @class = "form-control form-control-sm", @id = "txtLimit" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <div class="col-sm-6 mb-2">
+                                                                <button id="btncari" type="button" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-search"></i> Cari
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-sm-6 text-right">
+                                                                <button id="btnResend" type="button" class="btn btn-success btn-sm">
+                                                                    <i class="fas fa-paper-plane"></i> ReSend
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="table-responsive table-responsive-sm p-2 bg-white border">
+                                                    <table id="tableData" class="table table-bordered table-hover w-100">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>BL_NO</th>
+                                                                <th>NM_CARGOOWNER</th>
+                                                                <th>PRICE</th>
+                                                                <th>TERMINAL</th>
+                                                                <th>STATUS_SENT</th>
+                                                                <th>MESSAGE_SENT</th>
+                                                                <th>CREATED_DATE</th>
+                                                                <th>SEND_DATE</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                                                <div class="row">
+                                                    <section class="col-lg-7 p-0 connectedSortable">
+                                                        <div class="card mr-1">
+                                                            <div class="card-body">
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtprocessName" class="col-sm-2 control-label">Proc.Name</label>
+                                                                    <div class="col-sm-10">
+                                                                        @Html.DropDownList("txtprocessName", (ViewData["ApikeyList"] as SelectList), new { @class = "form-select form-control form-select-sm", @id = "txtprocessName" })
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtbaseUrl" class="col-sm-2 control-label">Base Url</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" id="txtbaseUrl" class="form-control form-control-sm" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtApiKey" class="col-sm-2 control-label">Nle-Api-Key</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" id="txtApiKey" class="form-control form-control-sm" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtbody" class="col-sm-2 control-label">Data/Body</label>
+                                                                    <div class="col-sm-10">
+                                                                        <textarea style="font-size: 12px !important;" class="form-control z-depth-1" id="txtbody" rows="7" placeholder="Write something here..."></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row mb-1">
+                                                                    <label class="col-sm-2 control-label"></label>
+                                                                    <div class="col-sm-10">
+                                                                        <div class="text-right">
+                                                                            <button id="btnSend" type="button" class="btn btn-sm btn-primary">Post Data</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                    <section class="col-lg-5 p-0 connectedSortable">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <h6 class="card-subtitle mb-2 text-muted">Response</h6>
+                                                                <table id='greetings' class='display compact dataTable table caption-top table-bordered table-hover w-100'>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                            <!-- Base Url Mulai-->
+                                            <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                                <div class="row">
+                                                    <section class="col-lg-5 connectedSortable">
+                                                        <div class="card">
+                                                            <div class="card-header">
+                                                                <p class="card-title text-sm text-left">Input Base Url</p>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtNamas" class="col-sm-2 control-label">Nama</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" id="txtNamas" class="form-control form-control-sm" required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtKode" class="col-sm-2 control-label">Key</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" id="txtKode" class="form-control form-control-sm" required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtUrl" class="col-sm-2 control-label">Url</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" id="txtUrl" class="form-control form-control-sm" required />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-1">
+                                                                    <label for="txtActive1323" class="col-sm-2 control-label">Status</label>
+                                                                    <div class="col-sm-10">
+                                                                        <select id="txtActive1323" class="form-select form-control form-select-sm" required>
+                                                                            <option value="True" selected>True</option>
+                                                                            <option value="False">False</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-1 text-right">
+                                                                    <div class="col-sm-12 text-right">
+                                                                        <a id="btnSaveBaseUrl" class="btn btn-sm btn-primary" href="#"><i class="fas fa-save mr-2"></i>Save</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                    <section class="col-lg-7 connectedSortable">
+                                                        <div class="card">
+                                                            <div class="card-header border-0">
+                                                                <p class="card-title text-sm">
+                                                                    View Data
+                                                                </p>
+                                                                <div class="card-tools">
+                                                                    <ul class="nav nav-pills ml-auto">
+                                                                        <li class="nav-item mr-2">
+                                                                            <a id="aRefresh" class="nav-link bg-success" href="#"><i class="fas fa-sync mr-1"></i>Refresh</a>
+                                                                        </li>
+                                                                        <li class="nav-item">
+                                                                            <a id="aDelete" class="nav-link bg-red" href="#"><i class="fas fa-trash mr-1"></i>Delete</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="table-responsive table-responsive-sm p-2 bg-white border">
+                                                                    <table id="urlData" class="table table-bordered table-hover w-100">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>ID</th>
+                                                                                <th>NAMA</th>
+                                                                                <th>KEY</th>
+                                                                                <th>URL</th>
+                                                                                <th>STATUS</th>
+                                                                                <th>CREATED</th>
+                                                                                <th>UPDATE</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                            <!-- Base Url Stop -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+
+    </div>
+</section>
+
+
+@section scripts {
+    <script src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Content/flatpickr/flatpickr.min.js"></script>
+    <script type="text/javascript" src="~/Content/flatpickr/id.min.js"></script>
+    <script type="text/javascript" src="~/Content/DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Content/DataTables/DataTables-1.10.25/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="~/Content/Select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="~/Content/JQuery_UI/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="~/Content/flatpickr/plugins/monthSelect/Index.js"></script>
+    <script type="text/javascript" src="~/Content/Toast/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @*<script type="text/javascript" src="~/Content/sockjs-client/stomp.min.js"></script>
+        <script type="text/javascript" src="~/Content/sockjs-client/sockjs.min.js"></script>*@
+    <script type="text/javascript">
+        var stompClient = null;
+    var tableNle = null;
+    var tableBaseUrl = null;
+            $(document).ready(function () {
+
+           SetDataDefault();
+
+            ExpandTreeView_('@Url.Action("Index","NLE", new { Area = "DocumentApi" })' + '/Index');
+
+            tableNle = Searching_Data($("#txtterminal").val(), $("#txtblno").val(), $("#txttgl").val(), $("#txttglto").val(), $("#txtLimit").val(), $("#txtstatus").val());
+
+            $("#btnSend").click(function () {
+                PostData();
+            })
+
+            $("#btncari").click(function () {
+                tableNle = Searching_Data($("#txtterminal").val(), $("#txtblno").val(), $("#txttgl").val(), $("#txttglto").val(), $("#txtLimit").val(), $("#txtstatus").val());
+            })
+
+            $("#btnResend").click(function () {
+                ReSendData();
+            })
+
+            $("#btnSaveBaseUrl").click(function () {
+                SaveBaseUrl();
+            })
+
+            $("#aRefresh").click(function () {
+                tableBaseUrl = RefreshBaseUrl();
+            })
+
+            $("#aDelete").click(function () {
+                DeleteBaseUrl();
+            })
+
+         
+
+            flatpickr("#txttgl,#txttglto", {
+                    dateFormat: "Y-m-d",
+                    altFormat: "F Y",
+                    static: true,
+                    defaultDate:"today",
+                    disableMobile: true,
+                });
+
+            $("#txtterminal,#txtblno,#txtLimit,#txtstatus,#txtActive1323,#txtprocessName").select2({
+               width: "100%", theme: "classic",disableMobile:true
+            });
+
+            $('#txtterminal').change(function () {
+                GetBlist($("#txtterminal").val(), $("#txtblno").val(), $("#txttgl").val(), $("#txttglto").val(), $("#txtLimit").val());
+            });
+
+            $('#txtprocessName').change(function () {
+                var a_ = JSON.parse($('#txtprocessName').val());
+                var Apikey_ = a_.kode;
+                var Url_ = a_.url;
+                var nama_ = a_.nama;
+                $("#txtApiKey").val(Apikey_);
+                $("#txtbaseUrl").val(Url_);
+            });
+
+            $('#tableData tbody').on('click', 'td.details-control', function () {
+                var selRow = tableNle.rows(this).data();
+                var rowIndex = $(this).closest("tr").index();
+                var tr = $(this).closest('tr');
+                var row = tableNle.row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    var id_ = "x"+rowIndex;
+                    row.child(CreateElement(id_)).show();
+                    //row.child(GetDetailUser(selRow[0]["BL_NO"], selRow[0]["NM_CARGOOWNER"], selRow[0]["PRICE"], selRow[0]["TERMINAL"], selRow[0]["STATUS_SENT"])).show();
+                    tr.addClass('shown');
+                    GetDetailData(id_, selRow[0]["TERMINAL"], selRow[0]["BL_NO"].trim(), $("#txttgl").val(), $("#txttglto").val(), $("#txtLimit").val());
+                }
+            });
+
+    })
+
+ 
+        function ReSendData() {
+
+            if (!navigator.onLine) {
+                Swal.fire('Netwok Connection Lost!', '', 'error');
+                return false;
+            }
+
+        var form = this;
+        var selRow = tableNle.rows('.selected').data();
+
+        if (selRow.length <= 0) {
+            Swal.fire('Please select the data!', '', 'info');
+            return false;
+        }
+
+        var dataCollection = '';
+        //var dataAcc = '';
+
+        var includePosted = false;
+        var bl_json_List = [];
+        var b_list = {};
+        $.each(selRow, function (index, row) {
+            var stat = row["MESSAGE_SENT"];
+            var beno = row["BL_NO"];
+            if (stat.includes("success")) {
+                includePosted = true;
+            }
+            dataCollection += '[' + row["BL_NO"] + '][' + row["NM_CARGOOWNER"] + ']' + "\n";
+            var obj = { 'bl_no': beno.trim() }
+            bl_json_List.push(obj);
+        })
+        b_list.lessee = bl_json_List;
+
+        if (includePosted) {
+            Swal.fire({
+                title: '<strong>Confirms Warning!</strong>',
+                icon: 'warning',
+                html:
+                    'Cant be ReSend: <br>' + 'Data Collection Containt Success!' + '',
+                showDenyButton: false,
+                showCancelButton: false,
+                confirmButtonText: 'OK, Exit',
+                denyButtonText: 'Don`t ReSend',
+            })
+            return;
+        }
+
+        Swal.fire({
+            title: '<strong>Konfirmasi Resend</strong>',
+            icon: 'info',
+            html:
+                'Are you sure to ReSend: <br>' + dataCollection + '?</a>',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, ReSend',
+            denyButtonText: 'Don`t ReSend',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                          $.ajax({
+                              url: '@Url.Action("ResenDData", "NLE", new {Area= "DocumentApi" })',
+                                data:JSON.stringify(b_list),
+                                type: 'Post',
+                                contentType: "application/json; charset=utf-8",
+                                success: function (x, textStatus, jQxhr) {
+                                    if (x.sts == "success") {
+                                        tableNle = Searching_Data($("#txtterminal").val(), $("#txtblno").val(), $("#txttgl").val(), $("#txttglto").val(), $("#txtLimit").val(), $("#txtstatus").val());
+                                    } else {
+                                        Swal.fire('Send Data Fail', '', 'info');
+                                    }
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                }
+                            });
+            } else if (result.isDenied) {
+                console.log("No ->Resend");
+                        Swal.fire('Changes are not ReSend', '', 'info')
+                    }
+                })
+
+        //if (includePosted) {
+        //    alert("One or more selected voucher are posted and can not be delete. Delete process canceled by system.");
+        //    return false;
+        //}
+    }
+
+    function Searching_Data(terminal, blno, tglfrom, tglto, limit, status_sent) {
+        return $("#tableData").DataTable({
+            bDestroy: true,
+            responsive: false,
+            processing: true,
+            "order": [[1, "asc"]],
+            serverSide: true,
+            "columnDefs": [
+                {
+                    "targets": 'no-sort',
+                    "orderable": true,
+                },
+                {
+                    "data": null,
+                    "width": "20px",
+                    "defaultContent": '',
+                    "orderable": true,
+                    "className": "details-control",
+                    "targets": [0]
+                }
+            ],
+            "columns": [
+                { "data": null },
+                { "data": "BL_NO", "name": "BL_NO" },
+                { "data": "NM_CARGOOWNER", "name": "NM_CARGOOWNER" },
+                { "data": "PRICE", "name": "PRICE" },
+                { "data": "TERMINAL", "name": "TERMINAL" },
+                { "data": "STATUS_SENT", "name": "STATUS_SENT" },
+                { "data": "MESSAGE_SENT", "name": "MESSAGE_SENT" },
+                {
+                    "data": "CREATED_DATE", "name": "CREATED_DATE",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.CREATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                },
+                {
+                    "data": "SEND_DATE", "name": "SEND_DATE",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.SEND_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                }
+            ],
+            "select": {
+                "style": 'multi'
+            },
+            "language":
+            {
+                "search": "",
+                "searchPlaceholder": "Search...",
+                "emptyTable": "No record found.",
+                "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:30px;color:rgb(75, 183, 245)'></i></div>"
+            },
+            "processing": "true",
+            "order": [[1, "asc"]],
+            "serverSide": "true",
+            "lengthMenu": [[1, 10, 20, 50, 100, 1000, -1], [1, 10, 20, 50, 100, 1000, "All"]],
+            "pageLength": 10,
+            "ajax":
+            {
+                "url": '@Url.Action("GetData", "NLE", new { Area = "DocumentApi" })',
+                "type": "POST",
+                "data": { "terminal_": terminal, "blno_": blno, "tglfrom_": tglfrom,"tglto_":tglto,"limit_":limit,"status_sent_":status_sent },
+                "dataType": "JSON"
+            }
+        });
+    }
+
+    function RefreshBaseUrl() {
+         return $("#urlData").DataTable({
+            bDestroy: true,
+            responsive: true,
+            processing: true,
+            "order": [[0, "desc"]],
+            serverSide: true,
+            "columnDefs": [
+                {
+                    "targets": 'no-sort',
+                    "orderable": true,
+                }
+            ],
+             "columns":[
+                { "data": "id", "name": "id" },
+                { "data": "nama", "name": "nama" },
+                { "data": "kode", "name": "kode" },
+                { "data": "url", "name": "url" },
+                { "data": "status", "name": "status" },
+                {
+                    "data": "created", "name": "created",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.created).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                },
+                {
+                    "data": "update", "name": "update",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.update).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                }
+            ],
+            "select": {
+                "style": 'multi'
+            },
+            "language":
+            {
+                "search": "",
+                "searchPlaceholder": "Search...",
+                "emptyTable": "No record found.",
+                "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:30px;color:rgb(75, 183, 245)'></i></div>"
+            },
+            "processing": "true",
+            "order": [[1, "asc"]],
+            "serverSide": "true",
+            "lengthMenu": [[1,5, 10, 20, 50, 100, 1000, -1], [1, 5,10, 20, 50, 100, 1000, "All"]],
+            "pageLength": 5,
+            "ajax":
+            {
+                "url": '@Url.Action("RefreshbaseUrl", "NLE", new { Area = "DocumentApi" })',
+                "type": "POST",
+                "data": {"Data":null},
+                "dataType": "JSON"
+            }
+        });
+    }
+
+    function DeleteBaseUrl() {
+        var selRow = tableBaseUrl.rows('.selected').data();
+        if (selRow.length <= 0) {
+            Swal.fire('Please select the data!', '', 'info');
+            return false;
+        }
+        var bl_json_List = [];
+        var b_list = {};
+        $.each(selRow, function (index, row) {
+            var nama = row['nama'];
+            var obj = { 'NamaApi': nama.trim() }
+            bl_json_List.push(obj);
+        })
+        b_list.cAu = bl_json_List;
+        if (b_list.length<=0) {
+            Swal.fire('Please select the data!', '', 'info');
+            return false;
+        }
+
+        BtnLoading($("#aDelete"));
+          $.ajax({
+              url: '@Url.Action("DeleteBaseUrl", "NLE", new {Area= "DocumentApi" })',
+              data:JSON.stringify(b_list),
+              type: 'Post',
+              contentType: "application/json; charset=utf-8",
+              success: function (x, textStatus, jQxhr) {
+                  BtnReset($("#aDelete"));
+                  tableBaseUrl = RefreshBaseUrl();
+              },
+              error: function (jqXhr, textStatus, errorThrown) {
+                  BtnReset($("#aDelete"));
+                   console.log(errorThrown);
+              }
+          });
+    }
+
+    function SaveBaseUrl() {
+        var txtNama_ = document.getElementById("txtNamas");
+        var txtKode = document.getElementById("txtKode");
+        var txtUrl = document.getElementById("txtUrl");
+        var txtActive1323 = document.getElementById("txtActive1323");
+
+        if ($.trim($(txtActive1323).val()) == "") {
+            CreateErrorPublic("txtActive1323", "This Empty!");
+            return false;
+        }
+        if ($.trim($(txtNama_).val()) == "") {
+            CreateErrorPublic("txtNamas", "This Empty!");
+            return false;
+        }
+        if ($.trim($(txtKode).val()) == "") {
+            CreateErrorPublic("txtKode", "This Empty!");
+            return false;
+        }
+        if ($.trim($(txtUrl).val()) == "") {
+            CreateErrorPublic("txtUrl", "This Empty!");
+            return false;
+        }
+        var d = {
+            nama:$(txtNama_).val(),kode:$(txtKode).val(),url:$(txtUrl).val(),status:$(txtActive1323).val()
+        }
+
+        BtnLoading($("#btnSaveBaseUrl"));
+
+        $.ajax({
+                    url: '@Url.Action("SaveBaseUrl", "NLE", new { Area = "DocumentApi" })',
+                    type: 'post',
+                    data: JSON.stringify(d),
+                    contentType: "application/json; charset=utf-8",
+            success: function (x, textStatus, jQxhr) {
+                BtnReset($("#btnSaveBaseUrl"));
+                        tableBaseUrl = RefreshBaseUrl();
+                    },
+            error: function (jqXhr, textStatus, errorThrown) {
+                BtnReset($("#btnSaveBaseUrl"));
+                        console.log(errorThrown);
+                    }
+        });
+
+    }
+
+
+        function GetBlist(terminal, blno, tglfrom, tglto, limit) {
+        $("#txtblno").empty();
+        var d = { terminal_: terminal,bl_no_:blno,from_:tglfrom,to_:tglto,limit_:limit };
+            $.ajax({
+                    url: '@Url.Action("Blist", "NLE", new { Area = "DocumentApi" })',
+                    type: 'post',
+                    data:JSON.stringify(d),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        if (x.status == "success") {
+                            var options = '';
+                            $.each(x.data, function (i, item) {
+                                options += '<option value=' + item.blno + '>' + item.nm_cargoowner  + '</option>';
+                            })
+                            $('#txtblno').append(options);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+    }
+
+        function GetDetailData(id_,terminal, blno, tglfrom, tglto, limit) {
+      /*var d = { terminal_: terminal, bl_no_: blno, from_: tglfrom, to_: tglto, limit_: limit };*/
+          var d = { bl_no: blno };
+          //console.log(JSON.stringify(d));
+              $.ajax({
+                    url: '@Url.Action("GetDetailData", "NLE", new { Area = "DocumentApi" })',
+                    type: 'post',
+                    data:JSON.stringify(d),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        if (x.status=="success") {
+                            //$("#" + id_).val(JSON.parse(x.data));
+                            document.getElementById(id_).value = x.data;
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+        }
+
+        function PostData() {
+             $.ajax({
+                    url: '@Url.Action("PostData", "NLE", new { Area = "DocumentApi" })',
+                    type: 'Get',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        showGreeting(JSON.stringify(x));
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+        }
+
+        function showGreeting(message) {
+            $("#greetings").append("<tr style='border-bottom: 1px solid black;'><td>" + message + "</td></tr>");
+        }
+
+        function setConnected(connected) {
+            $("#connect").prop("disabled", connected);
+            $("#disconnect").prop("disabled", !connected);
+            if (connected) {
+                $("#conversation").show();
+            }
+            else {
+                $("#conversation").hide();
+            }
+            $("#greetings").html("");
+            }
+
+        function SetDataDefault() {
+            var jsonData = {
+                "request_booking_id": "696c7a53-e5f2-4b9f-bb4d-067c56303wks",
+                "platform_booking_id": "BKD20211021-0092",
+                "kd_document_type": "BC 2.0",
+                "npwpCargoOwner": "1234567890",
+                "nm_cargoowner": "PT. ABC ",
+                "npwp_ppjk": "1234567890",
+                "nm_ppjk": "PT. ABC ",
+                "no_doc_release": "123/SP2/2020",
+                "date_doc_release": "2021-12-08 09:05:19",
+                "bl_no": "BL12345678",
+                "bl_date": "2020-08-07",
+                "id_platform": "PL013",
+                "terminal": "TO033",
+                "port_of_loading": "IDTPP",
+                "port_of_discharge": "IDTPP",
+                "pelabuhan": "IDPSU",
+                "paid_thrud_date": "2020-07-19",
+                "proforma": "Laporan Proforma",
+                "proforma_date": "2020-07-20",
+                "price": 8000000,
+                "status": "Finish",
+                "is_finished": 1,
+                "party": 1,
+                "jenis_sp2": "domestic",
+                "jenis_channel": "platform",
+                "sppb_no": "123/sppb/2021",
+                "sppb_date": "2021-07-21",
+                "dokumen": [{
+                    "document_no": "155804",
+                    "document_date": "2021-04-10",
+                    "document_status": "SPPB Released",
+                    "link_document": "url"
+                }],
+                "container": [
+                    {
+                        "container_no": "BL001X",
+                        "container_size": "20",
+                        "container_type": "Box",
+                        "gate_pass": "https://sp2.platform.com/get_pass.pdf"
+                    }
+                ]
+            }
+            var base_url = "https://nlehub.kemenkeu.go.id/nlesp2/v1/sp2/Booking/SaveBooking";
+            var apikey = "575c8ae3-a185-457a-a6f8-2ce8233ec4ee";
+            $("#txtbody").val(JSON.stringify(jsonData));
+            var obj = JSON.parse($("#txtbody").val());
+            var pretty = JSON.stringify(obj, undefined, 4);
+            $("#txtbody").val(pretty);
+               // $("#txtbaseUrl").val(base_url);
+                //$("#txtApiKey").val(apikey);
+            }
+
+        function AddToList(msg) {
+                var ul = document.getElementById("list");
+                ul.innerHTML += '<li>'+msg+' </li>';
+        }
+
+        function CreateElement(idx) {
+            let str = "";
+            str += "<div class='row'>";
+            str += "   <section class='col-lg-12'>";
+            str += "       <div class='card bg-gradient-success mb-2'>";
+            str += "        <div class='card-header border-1'>";
+            str += "            <h4 class='card-title'>";
+            str += "                Detail Data";
+            str += "            </h4>";
+            str += "        </div>";
+            str += "        <div class='card-body mb-1'>";
+            str += "      <div class='row mb-1'>";
+            str += "        <section class='col-lg-9'>";
+            str += "               <textarea style='font-size: 0.875em;font-weight:bold' class='form-control' id='" + idx + "' rows='5'></textarea>";
+            str += "      </section>";
+            str += "     </div>";
+
+            str += "      <div class='row mb-1 text-left'>";
+            str += "        <section class='col-lg-9'>";
+            str += " <button data-cp='" + idx + "' onclick='CopyJson(this)' id='btn" + idx + "' type='button' class='btn btn-light btn-sm'><i class='fas fa-copy mr-1'></i>Copy Json Body</button>";
+            str += "      </section>";
+            str += "     </div>";
+
+            str += "       </div>";
+            str += "    </div>";
+            str += " </section>";
+            str += "</div>";
+            return str;
+    }
+
+    function CopyJson(e) {
+        var copyText = document.getElementById(e.getAttribute("data-cp"));
+        BtnLoading($("#btn" + e.getAttribute("data-cp")));
+        setTimeout(function () {
+            copyToClipboard(copyText.value);
+            BtnReset($("#btn" + e.getAttribute("data-cp")));
+            ToastMakeText("Copy Success");
+        }, 1000);
+
+    }
+
+        function ToastMakeText(msg) {
+            toastr.options = {
+                "preventDuplicates": true,
+                "preventOpenDuplicates": true,
+                'progressBar': false,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "1500",
+                "extendedTimeOut": "1000",
+                "positionClass": "toast-bottom-center",
+                "animation": true,
+                "showMethod": "slideDown",
+                "hideMethod": "slideUp",
+                "closeMethod": "slideUp",
+            };
+            toastr.success(msg)
+        }
+    </script>
+}
+

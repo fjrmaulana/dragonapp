@@ -1,0 +1,5 @@
+[
+{"id":0,"Nama":"General Table","Kode":"mGT","Img":"nav-icon fas fa-table","Created":"2022-07-01T00:00:00","Update":"2022-07-01T00:00:00","Role":"rDev","Active":true},
+{"id":0,"Nama":"Document Api","Kode":"mDA","Img":"nav-icon fas fa-globe","Created":"2022-07-01T00:00:00","Update":"2022-07-01T00:00:00","Role":"rDev#rAdmin#rUser","Active":true},
+{"id":0,"Nama":"Maintenance","Kode":"mMT","Img":"nav-icon fas fa-columns","Created":"2022-07-01T00:00:00","Update":"2022-07-01T00:00:00","Role":"rDev","Active":true}
+]

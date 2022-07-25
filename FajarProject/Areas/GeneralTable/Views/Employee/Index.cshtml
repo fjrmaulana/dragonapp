@@ -1,0 +1,128 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+ @section Styles {
+        <link rel="stylesheet" href="~/Content/DataTables/datatables.css" />
+        <link href="~/Content/Select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+ }
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <section class="col-lg-12 p-0 connectedSortable">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <b>Employee Table</b>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row mb-1">
+                                        <div id='gridemployee' class='table-responsive table-responsive-sm p-2 bg-white'>
+                                            <table id='gridemployeedetail' class='display compact dataTable table caption-top table-bordered table-hover w-100'>
+                                                <caption style='caption-side:top'>Description of Employee Table</caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>PERSON_ID</th>
+                                                        <th>NIPP</th>
+                                                        <th>DATE_OF_BIRTH</th>
+                                                        <th>PRIMARY_EMAIL</th>
+                                                        <th>POSISI</th>
+                                                        <th>ORGANISASI_ID</th>
+                                                        <th>POSITION_ID</th>
+                                                        <th>LOCATION_ID</th>
+                                                        <th>ORGANISASI</th>
+                                                        <th>NAMA</th>
+                                                        <th>UPDATED</th>
+                                                        <th>FG_ACTIVE</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+   
+    @section scripts {
+        <script src="~/Scripts/moment.min.js"></script>
+        <script type="text/javascript" src="~/Content/DataTables/datatables.min.js"></script>
+        <script type="text/javascript" src="~/Content/Select2/js/select2.full.min.js"></script>
+        <script type="text/javascript">
+        var table = null;
+        $(document).ready(function () {
+            ExpandTreeView_('@Url.Action("Index","Employee", new { Area = "GeneralTable" })' + '/Index');
+
+            table = Refresh_table("287067465"); //GetDataEmployee();
+
+            $("#btnLoop1").click(function () {
+                table = Refresh_table("287067465"); //GetDataEmployee();
+            })
+        })
+
+        function Refresh_table(nipp) {
+            return $("#gridemployeedetail").DataTable({
+                bDestroy: true,
+                responsive: true,
+                "processing": "true",
+                "order": [[1, "asc"]],
+                "serverSide": "true",
+                "lengthMenu": [[1, 10, 20, 50, 100, 1000, -1], [1, 10, 20, 50, 100, 1000, "All"]],
+                "pageLength": 10,
+                "ajax":
+                {
+                    "url": '@Url.Action("GetData", "Employee", new { Area = "GeneralTable" })',
+                    "data": { 'NIPP': nipp },
+                    "type": "POST",
+                    "dataType": "JSON"
+                },
+                "columns": [
+                    { "data": "PERSON_ID", "name": "PERSON_ID" },
+                    { "data": "NIPP", "name": "NIPP" },
+                    {
+                        "data": "DATE_OFF_BIRTH", "name": "DATE_OFF_BIRTH", "render": function (data, type, row, meta) {
+                            return moment(row.PrintDate).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "PRIMARY_EMAIL", "name": "PRIMARY_EMAIL" },
+                    { "data": "POSISI", "name": "POSISI" },
+                    { "data": "ORGANISASI_ID", "name": "ORGANISASI_ID" },
+                    { "data": "POSITION_ID", "name": "POSITION_ID" },
+                    { "data": "LOCATION_ID", "name": "LOCATION_ID" },
+                    { "data": "ORGANISASI", "name": "ORGANISASI" },
+                    { "data": "NAMA", "name": "NAMA" },
+                    {
+                        "data": "UPDATED", "name": "UPDATED", "render": function (data, type, row, meta) {
+                            return moment(row.PrintDate).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "FG_ACTIVE", "name": "FG_ACTIVE" }
+                ],
+                "select": {
+                    "style": 'os'
+                },
+                "language":
+                {
+                    "search": "",
+                    "searchPlaceholder": "Search...",
+                    "emptyTable": "No record found.",
+                    "decimal": ",",
+                    "thousands": ".",
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:40px;color:rgb(75, 183, 245)'></i></div>"
+                }
+            })
+        }
+
+        
+        </script>
+    }
+

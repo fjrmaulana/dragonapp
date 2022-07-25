@@ -1,0 +1,5 @@
+[
+{"Id":1,"UserId":"dev","UserName":"dev","UserPass":"Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==","UserRolesId":"rdev","active":true,"UserCreated":"2022-07-25T10:02:06.9705067+07:00","UserUpdated":"2022-07-25T10:02:06.9705067+07:00"},
+{"Id":2,"UserId":"Ferdi","UserName":"Ferdi","UserPass":"Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==","UserRolesId":"radmin","active":true,"UserCreated":"2022-07-25T10:02:06.9705067+07:00","UserUpdated":"2022-07-25T10:02:06.9705067+07:00"},
+{"Id":2,"UserId":"Frans","UserName":"Frans","UserPass":"Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==","UserRolesId":"radmin","active":true,"UserCreated":"2022-07-25T10:02:06.9705067+07:00","UserUpdated":"2022-07-25T10:02:06.9705067+07:00"}
+]

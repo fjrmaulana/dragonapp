@@ -1,0 +1,43 @@
+{  
+   "request_booking_id":"696c7a53-e5f2-4b9f-bb4d-067c56303wks",
+   "platform_booking_id":"BKD20211021-0092",
+   "kd_document_type":"BC 2.0",
+   "npwpCargoOwner":"1234567890",
+   "nm_cargoowner":"PT. ABC ",
+   "npwp_ppjk":"1234567890",
+   "nm_ppjk":"PT. ABC ",
+   "no_doc_release":"123/SP2/2020",
+   "date_doc_release":"2021-12-08 09:05:19",
+   "bl_no":"BL12345678",
+   "bl_date":"2020-08-07",
+   "id_platform": "PL013",
+   "terminal": "TO033",
+   "port_of_loading": "IDTPP", 
+   "port_of_discharge": "IDTPP",
+   "pelabuhan": "IDPSU",
+   "paid_thrud_date": "2020-07-19",
+   "proforma": "Laporan Proforma",
+   "proforma_date": "2020-07-20",
+   "price": 8000000,
+   "status": "Finish",
+   "is_finished": 1,
+   "party": 1,
+   "jenis_sp2": "domestic",
+   "jenis_channel": "platform",
+  "sppb_no": "123/sppb/2021",
+   "sppb_date": "2021-07-21",
+   "dokumen": [{
+       "document_no": "155804",
+       "document_date": "2021-04-10",
+       "document_status": "SPPB Released",
+       "link_document": "url"
+   }],
+   "container": [
+       {
+           "container_no": "BL001X",
+           "container_size": "20",
+           "container_type": "Box",
+           "gate_pass": "https://sp2.platform.com/get_pass.pdf"
+       }
+   ]
+}

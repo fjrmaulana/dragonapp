@@ -1,0 +1,208 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>View</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/Content/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/AdminLTE/css/adminlte.min.css">
+    <link rel="stylesheet" href="~/Content/Select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/flatpickr/flatpickr.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/flatpickr/plugins/monthSelect/style.css" type="text/css" />
+
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h4 class="m-0">Transaction List</h4>
+            </div>
+            @*<div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard v1</li>
+                    </ol>
+                </div>*@
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4 col-6">
+                    <div class="card">
+                        <div class="card-header border-0 mr-2 bg-white">
+                            <div class="card-tools">
+                                <ul class="nav justify-content-center">
+                                    <li class="nav-item justify-content-center">
+                                        <div class="input-group mb-1 mt-1 mr-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" id="datepending">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div id="calendar" style="width: 100%"></div>
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3 id="totpending">0</h3>
+                                    <p>Quenue (state=0)</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="far fa-calendar-alt"></i>
+                                </div>
+                                @*<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <div class="card">
+                        <div class="card-header border-0 mr-2 bg-white">
+                            <div class="card-tools">
+                                <ul class="nav justify-content-center">
+                                    <li class="nav-item justify-content-center">
+                                        <div class="input-group mb-1 mt-1 mr-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" id="datesuccess">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div id="calendar" style="width: 100%"></div>
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3 id="totsuccess">0</h3>
+                                    <p>Success (state=1)</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="far fa-calendar-alt"></i>
+                                </div>
+                                @*<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <div class="card">
+                        <div class="card-header border-0 mr-2 bg-white">
+                            <div class="card-tools">
+                                <ul class="nav justify-content-center">
+                                    <li class="nav-item justify-content-center">
+                                        <div class="input-group mb-1 mt-1 mr-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </div>
+                                            </div>
+                                            <input type="text" class="form-control" id="dategagal">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div id="calendar" style="width: 100%"></div>
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3 id="totgagal">0</h3>
+                                    <p>Invalid (state=500)</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="far fa-calendar-alt"></i>
+                                </div>
+                                @*<a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @section Scripts{
+        <script type="text/javascript" src="~/Content/flatpickr/flatpickr.min.js"></script>
+        <script type="text/javascript" src="~/Content/flatpickr/id.min.js"></script>
+        <script type="text/javascript" src="~/Content/flatpickr/plugins/monthSelect/Index.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                flatpickr("#datesuccess,#dategagal,#datepending", {
+                    dateFormat: "Y-m-d",
+                    altFormat: "F Y",
+                    static: true,
+                    defaultDate: "today",
+                    disableMobile: true,
+                    plugins: [
+                        new monthSelectPlugin({
+                            shorthand: true, //defaults to false
+                            dateFormat: "M Y", //defaults to "F Y"
+                            altFormat: "F Y", //defaults to "F Y"
+                            theme: "dark" // defaults to "light"
+                        })
+                    ]
+                });
+
+                $('#datepending').change(function () {
+                    var a_ = $('#datepending').val();
+                    GetCount(a_, "0", $("#totpending"));
+                });
+                $('#dategagal').change(function () {
+                    var gagal_ = $('#dategagal').val();
+                    GetCount(gagal_, "500", $("#totgagal"));
+                });
+                $('#datesuccess').change(function () {
+                    var success_ = $('#datesuccess').val();
+                    GetCount(success_, "1", $("#totsuccess"));
+                });
+
+            })
+
+            function GetCount(datetimeNya, status500orAnother, ReturnElement) {
+                BtnLoading(ReturnElement);
+                var d = { dat: datetimeNya, status_send:status500orAnother}
+                 $.ajax({
+                    url: '@Url.Action("GetTotalStatus", "Main")',
+                    type: 'post',
+                    data: JSON.stringify(d),
+                    contentType: "application/json; charset=utf-8",
+                     success: function (x, textStatus, jQxhr) {
+                         BtnReset(ReturnElement);
+                         if (x.status=='success') {
+                             $(ReturnElement).html(x.count);
+                         }
+                      },
+                     error: function (jqXhr, textStatus, errorThrown) {
+                         BtnReset(ReturnElement);
+                        console.log(errorThrown);
+                    }
+        });
+            }
+        </script>
+    }
+
+</body>
+</html>

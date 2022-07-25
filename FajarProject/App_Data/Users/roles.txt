@@ -1,0 +1,1 @@
+[{"RoleId":"rAdmin","RoleName":"Admin","RoleStatus":true},{"RoleId":"rUser","RoleName":"User","RoleStatus":true},{"RoleId":"rMaintenance","RoleName":"Maintenance","RoleStatus":true},{"RoleId":"rDev","RoleName":"Development","RoleStatus":true}]
